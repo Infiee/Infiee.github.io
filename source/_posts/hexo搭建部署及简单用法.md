@@ -8,11 +8,11 @@ tags: hexo
 快速开始，搭建本地hexo
 ----------------------
 
-1.安装Node.js，[Node.js下载](https://nodejs.org/en/).
+1、安装Node.js，[Node.js下载](https://nodejs.org/en/).
 
-2.安装Git,[Git客户端](https://desktop.github.com/).记得勾选添加环境变量的选项,不然就自己配置环境变量.
+2、安装Git,[Git客户端](https://desktop.github.com/).记得勾选添加环境变量的选项,不然就自己配置环境变量.
 
-3.安装hexo
+3、安装hexo
 
 <!-- more -->
 
@@ -52,7 +52,7 @@ tags: hexo
 
 ```
 
-4.部署静态网页到GitHub
+4、部署静态网页到GitHub
 
 ```
 # 登录GitHub，注册自定义用户名如apple
