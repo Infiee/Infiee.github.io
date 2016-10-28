@@ -49,7 +49,10 @@ tagcloud: true
 #friends: false
 #开启——
 friends:
-  旺仔小馒头的博客: http://infiee.github.io/
+  阮一峰的博客: http://www.ruanyifeng.com/
+  reactNative学习手册: https://github.com/ele828/react-native-guide
+  redux试用: https://github.com/lewis617/react-redux-tutorial
+  利炳根简书: http://www.jianshu.com/users/eaec1fc422e9/latest_articles
 
 #是否开启“关于我”。
 #不开启——
