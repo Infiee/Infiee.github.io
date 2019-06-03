@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>ionic自动更新(ios和android) - faye_wong的学习博客</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="首先，感谢分享本篇技术文档的作者， 以下文档整理自https://www.bestguy.net/2015/11/05/关于ionic的版本升级，只升级www部分  背景： ionic官方有介绍如何更新、回滚等，但deploy服务器在国外,故不翻墙大多数时候是无法下载的，故需要自己搭建本地服务器。 参考官方文档：http://docs.ionic.io/docs/deploy-overview i">
+<meta name="keywords" content="ionic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ionic自动更新(ios和android)">
+<meta property="og:url" content="http://infiee.github.io/2016/06/02/ionic自动更新-ios和android/index.html">
+<meta property="og:site_name" content="faye_wong的学习博客">
+<meta property="og:description" content="首先，感谢分享本篇技术文档的作者， 以下文档整理自https://www.bestguy.net/2015/11/05/关于ionic的版本升级，只升级www部分  背景： ionic官方有介绍如何更新、回滚等，但deploy服务器在国外,故不翻墙大多数时候是无法下载的，故需要自己搭建本地服务器。 参考官方文档：http://docs.ionic.io/docs/deploy-overview i">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://infiee.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2019-05-30T05:23:49.902Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ionic自动更新(ios和android)">
+<meta name="twitter:description" content="首先，感谢分享本篇技术文档的作者， 以下文档整理自https://www.bestguy.net/2015/11/05/关于ionic的版本升级，只升级www部分  背景： ionic官方有介绍如何更新、回滚等，但deploy服务器在国外,故不翻墙大多数时候是无法下载的，故需要自己搭建本地服务器。 参考官方文档：http://docs.ionic.io/docs/deploy-overview i">
+<meta name="twitter:image" content="http://infiee.github.io/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo logo-text" href="/">
+            
+                faye_wong的学习博客
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">首页</a>
+                
+                <a class="navbar-item" href="/archives">归档</a>
+                
+                <a class="navbar-item" href="/categories">目录</a>
+                
+                <a class="navbar-item" href="/tags">标签</a>
+                
+                <a class="navbar-item" href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2016-06-02T03:36:46.000Z">2016-06-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/跨平台/">跨平台</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 分钟 读完 (大约 1101 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                ionic自动更新(ios和android)
+            
+        </h1>
+        <div class="content">
+            <h3 id="首先，感谢分享本篇技术文档的作者，"><a href="#首先，感谢分享本篇技术文档的作者，" class="headerlink" title="首先，感谢分享本篇技术文档的作者，"></a>首先，感谢分享本篇技术文档的作者，</h3><blockquote>
+<p>以下文档整理自<a href="https://www.bestguy.net/2015/11/05/关于ionic的版本升级，只升级www部分" target="_blank" rel="noopener">https://www.bestguy.net/2015/11/05/关于ionic的版本升级，只升级www部分</a></p>
+</blockquote>
+<p><strong>背景：</strong></p>
+<p>ionic官方有介绍如何更新、回滚等，但deploy服务器在国外,故不翻墙大多数时候是无法下载的，故需要自己搭建本地服务器。</p>
+<p>参考官方文档：<a href="http://docs.ionic.io/docs/deploy-overview" target="_blank" rel="noopener">http://docs.ionic.io/docs/deploy-overview</a></p>
+<p><strong>ionic自动更新：</strong></p>
+<p>讲下原理，ionic内部也是cordova的，在android平台下，他的webview默认加载assert下边的www里边的内容，我们更新的时候，通过native android 把更新包下载下来，解压到 data/data/xx.xx/www里边，然后用cordova的 webView.loadUrlIntoView 直接把新的版本载入，升级完成。</p>
+<a id="more"></a>
+
+<p><strong>操作步骤：</strong></p>
+<p>1、这两个文件下载好，放到www/js 里边，在index.html 的之前，引入这两个js</p>
+<p>这个是deploy依赖的ionic核心组件(修改自官方版)</p>
+<blockquote>
+<p><a href="https://raw.githubusercontent.com/lngjy/ionic-service-core-private/master/ionic-core.js" target="_blank" rel="noopener">https://raw.githubusercontent.com/lngjy/ionic-service-core-private/master/ionic-core.js</a></p>
+</blockquote>
+<p>deploy的组件(修改自官方版)</p>
+<blockquote>
+<p><a href="https://raw.githubusercontent.com/lngjy/ionic-service-deploy-private/master/ionic-deploy.js" target="_blank" rel="noopener">https://raw.githubusercontent.com/lngjy/ionic-service-deploy-private/master/ionic-deploy.js</a></p>
+</blockquote>
+<p>2、安装deploy插件</p>
+<p>deploy插件（修改自官方版）</p>
+<blockquote>
+<p>cordova plugin add <a href="https://github.com/lngjy/ionic-plugin-deploy-private.git" target="_blank" rel="noopener">https://github.com/lngjy/ionic-plugin-deploy-private.git</a></p>
+</blockquote>
+<p>3、app.js 部分：</p>
+<p>angular.module 里边加入 ‘ionic.service.deploy’,’ionic.service.core’</p>
+<p>这两个依赖.config 部分 ， 注入 $ionicAppProvider</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ionicAppProvider.identify(&#123;</span><br><span class="line">//这个应用的标识</span><br><span class="line">app_id: &apos;xc02&apos;,</span><br><span class="line">//生产环境的域名</span><br><span class="line">domain: &apos;http://www.bestguy.net&apos;,</span><br><span class="line">//生产环境</span><br><span class="line">channel_tag: &apos;prod&apos;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>4、检查更新：</p>
+<p>检测升级实际上是post数据到 <a href="http://www.bestguy.net/update/check/xc02（根据自身服务器地址情况修改）" target="_blank" rel="noopener">http://www.bestguy.net/update/check/xc02（根据自身服务器地址情况修改）</a> 上边，json 格式如下</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//device_app_version：这个是app自己的version，在config.xml 里边配置;</span><br><span class="line">//device_deploy_uuid：这个是升级的uuid，理论上和你的最新版本保持一致，或者你自己定这个版本，具体怎么回事，下边会说;</span><br><span class="line">//device_platform：这个android和ios channel_tag 这个是标志是哪个环境用的。</span><br><span class="line">&#123;</span><br><span class="line">&quot;device_app_version&quot;:1.0,</span><br><span class="line">&quot;device_deploy_uuid&quot;:1.0,</span><br><span class="line">&quot;device_platform&quot;:&quot;android&quot;,</span><br><span class="line">&quot;channel_tag&quot;:&quot;production&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>好了。 这个post到服务器，服务器需要处理这个数据， 如果从来没更新过， 那么device_deploy_uuid这个会传NO_DEPLOY_AVAILABLE过去，表示客户端从来没升级过，这个时候，需要判断device_app_version这个版本。</p>
+<p>好了，我们返回构造数据</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//compatible_binary 和 update_available 都是true 的时候，就会下载更新。</span><br><span class="line">//如果安装成功，下次就会给服务器传这个uuid的版本，所以，一定要自己搞明白对应关系，推荐和版本一致。</span><br><span class="line">//url 是下载包的位置，相对路径哦，相对于你服务器路径如：http://baidu.com/test/www.zip</span><br><span class="line">&#123;</span><br><span class="line">&apos;compatible_binary&apos;: true,</span><br><span class="line">&apos;update_available&apos;: true,</span><br><span class="line">&apos;update&apos;:</span><br><span class="line">      &#123;</span><br><span class="line">        &apos;uuid&apos;: &apos;1.0.3&apos;,</span><br><span class="line">        &apos;url&apos;: &apos;/test/www.zip&apos;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写好了代码之后，压缩www目录下的所有文件（ps:不要压缩www,是www里面的所有文件)</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ionic platform add android</span><br><span class="line">ionic build android</span><br><span class="line">cd platforms/android/assets/www</span><br><span class="line">zip -r www.zip *</span><br></pre></td></tr></table></figure>
+
+<p>5.添加升级检测部分代码：</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">.factory(&quot;versionUpdateService&quot;, function (</span><br><span class="line">        $ionicPopup,</span><br><span class="line">        $ionicDeploy,</span><br><span class="line">        $timeout,</span><br><span class="line">        $ionicLoading) &#123;</span><br><span class="line">            var version ;</span><br><span class="line">            /**</span><br><span class="line">            * 获得version</span><br><span class="line">            */</span><br><span class="line">            function getAppVersion() &#123;</span><br><span class="line">               $ionicDeploy.info().then(function (data) &#123;</span><br><span class="line">                   var binaryVersion = data.binary_version;</span><br><span class="line">                   var deployUuid = data.deploy_uuid;</span><br><span class="line">                   version =  deployUuid != &apos;NO_DEPLOY_AVAILABLE&apos; ? deployUuid : binaryVersion;</span><br><span class="line">               &#125;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            /**</span><br><span class="line">            * 检查更新</span><br><span class="line">            */</span><br><span class="line">            function checkUpdate() &#123;</span><br><span class="line">               $ionicLoading.show(&#123;</span><br><span class="line">                   template: &apos;正在检查更新...&apos;,</span><br><span class="line">                   animation: &apos;fade-in&apos;,</span><br><span class="line">                   showBackdrop: true,</span><br><span class="line">                   duration: 3000,</span><br><span class="line">                   showDelay: 0</span><br><span class="line">               &#125;);</span><br><span class="line"></span><br><span class="line">               $ionicDeploy.check().then(function (hasUpdate) &#123;</span><br><span class="line"></span><br><span class="line">                   if (hasUpdate) &#123;</span><br><span class="line">                       showUpdateConfirm();</span><br><span class="line">                   &#125; else &#123;</span><br><span class="line">                       $ionicLoading.show(&#123;</span><br><span class="line">                           template: &apos;恭喜你,你的版本已经是最新!&apos;,</span><br><span class="line">                           animation: &apos;fade-in&apos;,</span><br><span class="line">                           showBackdrop: true,</span><br><span class="line">                           duration: 2000,</span><br><span class="line">                           showDelay: 0</span><br><span class="line">                       &#125;);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;, function (err) &#123;</span><br><span class="line">                   $ionicLoading.show(&#123;</span><br><span class="line">                       template: &apos;更新失败,请检查您的网络配置!&apos; + err,</span><br><span class="line">                       animation: &apos;fade-in&apos;,</span><br><span class="line">                       showBackdrop: true,</span><br><span class="line">                       duration: 2000,</span><br><span class="line">                       showDelay: 0</span><br><span class="line">                   &#125;);</span><br><span class="line"></span><br><span class="line">               &#125;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            function init() &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            function showUpdateConfirm() &#123;</span><br><span class="line">               $ionicLoading.hide();</span><br><span class="line">               var confirmPopup = $ionicPopup.confirm(&#123;</span><br><span class="line">                   title: &apos;版本升级&apos;,</span><br><span class="line">                   template: &quot;有新的版本了,是否要升级?&quot;,</span><br><span class="line">                   cancelText: &apos;取消&apos;,</span><br><span class="line">                   okText: &apos;升级&apos;</span><br><span class="line">               &#125;);</span><br><span class="line">               confirmPopup.then(function (res) &#123;</span><br><span class="line">                   $ionicLoading.show(&#123;</span><br><span class="line">                       template: &apos;正在更新...&apos;,</span><br><span class="line">                       animation: &apos;fade-in&apos;,</span><br><span class="line">                       showBackdrop: true,</span><br><span class="line">                       //duration: 2000,</span><br><span class="line">                       showDelay: 0</span><br><span class="line">                   &#125;);</span><br><span class="line"></span><br><span class="line">                   if (res) &#123;</span><br><span class="line">                       $ionicDeploy.update().then(function (res) &#123;</span><br><span class="line">                           $ionicLoading.hide();</span><br><span class="line">                           $ionicLoading.show(&#123;</span><br><span class="line">                               template: &apos;更新成功!&apos;,</span><br><span class="line">                               animation: &apos;fade-in&apos;,</span><br><span class="line">                               showBackdrop: true,</span><br><span class="line">                               duration: 2000,</span><br><span class="line">                               showDelay: 0</span><br><span class="line">                           &#125;);</span><br><span class="line">                       &#125;, function (err) &#123;</span><br><span class="line">                           $ionicLoading.hide();</span><br><span class="line">                           $ionicLoading.show(&#123;</span><br><span class="line">                               template: &apos;更新失败!&apos; + err,</span><br><span class="line">                               animation: &apos;fade-in&apos;,</span><br><span class="line">                               showBackdrop: true,</span><br><span class="line">                               duration: 2000,</span><br><span class="line">                               showDelay: 0</span><br><span class="line">                           &#125;);</span><br><span class="line">                       &#125;, function (prog) &#123;</span><br><span class="line">                           $ionicLoading.show(&#123;</span><br><span class="line">                               template: &quot;已经下载：&quot; + prog + &quot;%&quot;</span><br><span class="line">                           &#125;);</span><br><span class="line">                           if (downloadProgress &gt; 99) &#123;</span><br><span class="line">                               $ionicLoading.hide();</span><br><span class="line">                           &#125;</span><br><span class="line">                       &#125;);</span><br><span class="line">                   &#125; else &#123;</span><br><span class="line">                       $ionicLoading.hide();</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;);</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            return &#123;</span><br><span class="line">               init: function () &#123;</span><br><span class="line">                   getAppVersion();</span><br><span class="line">               &#125;,</span><br><span class="line"></span><br><span class="line">               getVersion: function () &#123;</span><br><span class="line">                   return version;</span><br><span class="line">               &#125;,</span><br><span class="line"></span><br><span class="line">               checkUpdate: function () &#123;</span><br><span class="line">                   checkUpdate();</span><br><span class="line">               &#125;,</span><br><span class="line"></span><br><span class="line">               update: function () &#123;</span><br><span class="line">                   update();</span><br><span class="line">               &#125;</span><br><span class="line">            &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>补充：<br>2017-12-04<br>另外几个cordova更新插件：</p>
+<p><a href="https://github.com/nordnet/cordova-hot-code-push" target="_blank" rel="noopener">cordova-hot-code-push-plugin</a></p>
+<p><a href="https://github.com/Microsoft/cordova-plugin-code-push" target="_blank" rel="noopener">cordova-code-push</a></p>
+<blockquote>
+<p>发现原作者博客打不开，补上另一个博主链接 <a href="http://www.scaperow.com/133" target="_blank" rel="noopener">http://www.scaperow.com/133</a></p>
+</blockquote>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/ionic/">ionic</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/06/02/ionic调用原生转场动画/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">ionic调用原生页面切换动画</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/06/02/ionic缓存和数据存储/">
+                <span class="level-item">ionic缓存和数据存储</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.png" alt="faye_wong">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        faye_wong
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        web developer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Wuhan</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        26
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        18
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/infiee" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/infiee">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://jonny-huang.github.io/" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">jonny</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">jonny-huang.github.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://ithelp.ithome.com.tw/users/20072603/ironman/2087?page=1" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">it帮帮忙</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">ithelp.ithome.com.tw</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/juliandavidmr/awesome-nestjs#projects-using-nestjs" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">awesome-nestjs</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/web/">
+            <span class="level-start">
+                <span class="level-item">web</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/工具/">
+            <span class="level-start">
+                <span class="level-item">工具</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/服务端/">
+            <span class="level-start">
+                <span class="level-item">服务端</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/服务端/nestjs/">
+            <span class="level-start">
+                <span class="level-item">nestjs</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/跨平台/">
+            <span class="level-start">
+                <span class="level-item">跨平台</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/angular/" style="font-size: 13.33px;">angular</a> <a href="/tags/cordova/" style="font-size: 13.33px;">cordova</a> <a href="/tags/express/" style="font-size: 10px;">express</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/ionic/" style="font-size: 20px;">ionic</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nestjs/" style="font-size: 16.67px;">nestjs</a> <a href="/tags/node-js/" style="font-size: 16.67px;">node.js</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a> <a href="/tags/react/" style="font-size: 10px;">react</a> <a href="/tags/react-native/" style="font-size: 10px;">react-native</a> <a href="/tags/redux/" style="font-size: 10px;">redux</a> <a href="/tags/sketch/" style="font-size: 10px;">sketch</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/工具插件/" style="font-size: 10px;">工具插件</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/06/03/nestjs框架学习记录Day5/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs框架学习记录Day5">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-03T07:58:28.000Z">2019-06-03</time></div>
+                    <a href="/2019/06/03/nestjs框架学习记录Day5/" class="has-link-black-ter is-size-6">nestjs框架学习记录Day5</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/02/nestjs框架学习记录Day4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs框架学习记录Day4">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-02T13:58:12.000Z">2019-06-02</time></div>
+                    <a href="/2019/06/02/nestjs框架学习记录Day4/" class="has-link-black-ter is-size-6">nestjs框架学习记录Day4</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/01/nestjs框架学习记录Day3/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs框架学习记录Day3">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-01T15:01:31.000Z">2019-06-01</time></div>
+                    <a href="/2019/06/01/nestjs框架学习记录Day3/" class="has-link-black-ter is-size-6">nestjs框架学习记录Day3</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/31/nestjs框架学习记录Day2/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs框架学习记录Day2">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-31T14:37:43.000Z">2019-05-31</time></div>
+                    <a href="/2019/05/31/nestjs框架学习记录Day2/" class="has-link-black-ter is-size-6">nestjs框架学习记录Day2</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/服务端/">服务端</a> / <a class="has-link-grey -link" href="/categories/服务端/nestjs/">nestjs</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/30/nestjs学习资料/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs学习资料">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-30T06:55:02.000Z">2019-05-30</time></div>
+                    <a href="/2019/05/30/nestjs学习资料/" class="has-link-black-ter is-size-6">nestjs学习资料</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/服务端/">服务端</a> / <a class="has-link-grey -link" href="/categories/服务端/nestjs/">nestjs</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/cordova/">
+                        <span class="tag">cordova</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/express/">
+                        <span class="tag">express</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/html/">
+                        <span class="tag">html</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/ionic/">
+                        <span class="tag">ionic</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/javascript/">
+                        <span class="tag">javascript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/markdown/">
+                        <span class="tag">markdown</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nestjs/">
+                        <span class="tag">nestjs</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/node-js/">
+                        <span class="tag">node.js</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nodejs/">
+                        <span class="tag">nodejs</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/react/">
+                        <span class="tag">react</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/react-native/">
+                        <span class="tag">react-native</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/redux/">
+                        <span class="tag">redux</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/sketch/">
+                        <span class="tag">sketch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/vue/">
+                        <span class="tag">vue</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/工具插件/">
+                        <span class="tag">工具插件</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/06/03/nestjs框架学习记录Day5/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs框架学习记录Day5">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-03T07:58:28.000Z">2019-06-03</time></div>
+                    <a href="/2019/06/03/nestjs框架学习记录Day5/" class="has-link-black-ter is-size-6">nestjs框架学习记录Day5</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/02/nestjs框架学习记录Day4/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs框架学习记录Day4">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-02T13:58:12.000Z">2019-06-02</time></div>
+                    <a href="/2019/06/02/nestjs框架学习记录Day4/" class="has-link-black-ter is-size-6">nestjs框架学习记录Day4</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/01/nestjs框架学习记录Day3/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs框架学习记录Day3">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-01T15:01:31.000Z">2019-06-01</time></div>
+                    <a href="/2019/06/01/nestjs框架学习记录Day3/" class="has-link-black-ter is-size-6">nestjs框架学习记录Day3</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/31/nestjs框架学习记录Day2/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs框架学习记录Day2">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-31T14:37:43.000Z">2019-05-31</time></div>
+                    <a href="/2019/05/31/nestjs框架学习记录Day2/" class="has-link-black-ter is-size-6">nestjs框架学习记录Day2</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/服务端/">服务端</a> / <a class="has-link-grey -link" href="/categories/服务端/nestjs/">nestjs</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/30/nestjs学习资料/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="nestjs学习资料">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-30T06:55:02.000Z">2019-05-30</time></div>
+                    <a href="/2019/05/30/nestjs学习资料/" class="has-link-black-ter is-size-6">nestjs学习资料</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/服务端/">服务端</a> / <a class="has-link-grey -link" href="/categories/服务端/nestjs/">nestjs</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/cordova/">
+                        <span class="tag">cordova</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/express/">
+                        <span class="tag">express</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/html/">
+                        <span class="tag">html</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/ionic/">
+                        <span class="tag">ionic</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/javascript/">
+                        <span class="tag">javascript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/markdown/">
+                        <span class="tag">markdown</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nestjs/">
+                        <span class="tag">nestjs</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/node-js/">
+                        <span class="tag">node.js</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nodejs/">
+                        <span class="tag">nodejs</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/react/">
+                        <span class="tag">react</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/react-native/">
+                        <span class="tag">react-native</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/redux/">
+                        <span class="tag">redux</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/sketch/">
+                        <span class="tag">sketch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/vue/">
+                        <span class="tag">vue</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/工具插件/">
+                        <span class="tag">工具插件</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    faye_wong的学习博客
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 faye_wong&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
