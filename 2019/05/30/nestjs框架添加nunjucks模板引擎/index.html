@@ -2,22 +2,24 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>标签: node.js - faye_wong的学习博客</title>
+<title>nestjs框架添加nunjucks模板引擎 - faye_wong的学习博客</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="学习记录">
-<meta property="og:type" content="website">
-<meta property="og:title" content="faye_wong的学习博客">
-<meta property="og:url" content="http://infiee.github.io/tags/node-js/index.html">
+    <meta name="description" content="添加nunjucks模板引擎1、添加 nunjucks npm 包 2、根目录新建views文件夹存放模板（和src同目录），并新建index.njk 3、main.ts内">
+<meta name="keywords" content="nestjs,node.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nestjs框架添加nunjucks模板引擎">
+<meta property="og:url" content="http://infiee.github.io/2019/05/30/nestjs框架添加nunjucks模板引擎/index.html">
 <meta property="og:site_name" content="faye_wong的学习博客">
-<meta property="og:description" content="学习记录">
+<meta property="og:description" content="添加nunjucks模板引擎1、添加 nunjucks npm 包 2、根目录新建views文件夹存放模板（和src同目录），并新建index.njk 3、main.ts内">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://infiee.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2019-06-12T07:58:44.109Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="faye_wong的学习博客">
-<meta name="twitter:description" content="学习记录">
+<meta name="twitter:title" content="nestjs框架添加nunjucks模板引擎">
+<meta name="twitter:description" content="添加nunjucks模板引擎1、添加 nunjucks npm 包 2、根目录新建views文件夹存放模板（和src同目录），并新建index.njk 3、main.ts内">
 <meta name="twitter:image" content="http://infiee.github.io/images/og_image.png">
 
 
@@ -138,71 +140,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    <div class="card-content">
-        <nav class="breadcrumb" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="/tags">标签</a></li>
-            <li class="is-active"><a href="#" aria-current="page">node.js</a></li>
-        </ul>
-        </nav>
-    </div>
-</div>
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-05-30T06:55:02.000Z">2019-05-30</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/服务端/">服务端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/服务端/nestjs/">nestjs</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    4 分钟 读完 (大约 585 个字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/05/30/nestjs学习资料/">nestjs学习资料</a>
-            
-        </h1>
-        <div class="content">
-            <p>用于构建高效且可伸缩的服务端应用程序的渐进式 Node.js 框架。完美支持 Typescript、面向 AOP 编程、支持 typeorm、Node.js 版的 spring、构建微服务应用。</p>
-<p>相比koa、express这些基础框架，然后自己拼积木的方式（寻找一堆插件来实现想要的功能），且由于太灵活，容易造成代码不太方便管理、维护和写出高质量代码。</p>
-<p>吸引我尝试去使用nestjs是因为了解到它自身的的功能就非常丰富，去中心化的路由、中间件、异常处理、管道、守卫等，还介绍了如何搭建微服务。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/30/nestjs学习资料/#more">阅读更多</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
     
     <div class="card-content article ">
         
@@ -227,23 +164,33 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2019/05/30/nestjs框架添加nunjucks模板引擎/">nestjs框架添加nunjucks模板引擎</a>
+                nestjs框架添加nunjucks模板引擎
             
         </h1>
         <div class="content">
             <h3 id="添加nunjucks模板引擎"><a href="#添加nunjucks模板引擎" class="headerlink" title="添加nunjucks模板引擎"></a>添加nunjucks模板引擎</h3><p>1、添加 nunjucks npm 包</p>
 <p>2、根目录新建views文件夹存放模板（和src同目录），并新建index.njk</p>
 <p>3、main.ts内</p>
+<a id="more"></a>
+
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">import &#123; NestFactory &#125; from &apos;@nestjs/core&apos;;</span><br><span class="line">import &#123; AppModule &#125; from &apos;./app.module&apos;;</span><br><span class="line"></span><br><span class="line">import &#123; NestExpressApplication &#125; from &apos;@nestjs/platform-express&apos;;</span><br><span class="line">import &#123; join &#125; from &apos;path&apos;</span><br><span class="line">import * as nunjucks from &apos;nunjucks&apos;</span><br><span class="line"></span><br><span class="line">async function bootstrap() &#123;</span><br><span class="line">  const app = await NestFactory.create&lt;NestExpressApplication&gt;(AppModule);</span><br><span class="line"></span><br><span class="line">  // 获取根目录nest-cnode</span><br><span class="line">  const rootDir = join(__dirname, &apos;..&apos;);</span><br><span class="line"></span><br><span class="line">  const environment = nunjucks.configure(</span><br><span class="line">    [</span><br><span class="line">      join(rootDir, &quot;views&quot;)</span><br><span class="line">    ],</span><br><span class="line">    &#123;</span><br><span class="line">      autoescape: true,</span><br><span class="line">      throwOnUndefined: false,</span><br><span class="line">      trimBlocks: true,</span><br><span class="line">      lstripBlocks: false,</span><br><span class="line">      watch: true,</span><br><span class="line">      noCache: process.env.NODE_ENV === &quot;local&quot; ? true : false,</span><br><span class="line">      express: app</span><br><span class="line">    &#125;</span><br><span class="line">  );</span><br><span class="line">  app.engine(&quot;njk&quot;, environment.render);</span><br><span class="line">  app.setViewEngine(&quot;njk&quot;);</span><br><span class="line">  app.set(&quot;view cache&quot;, true);</span><br><span class="line"></span><br><span class="line">  await app.listen(3000);</span><br><span class="line">&#125;</span><br><span class="line">bootstrap();</span><br></pre></td></tr></table></figure>
+
+<p>4、修改src/app.controller.ts</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Controller, Get, Post,Render &#125; from &apos;@nestjs/common&apos;;</span><br><span class="line">import &#123; AppService &#125; from &apos;./app.service&apos;;</span><br><span class="line"></span><br><span class="line">@Controller()</span><br><span class="line">export class AppController &#123;</span><br><span class="line">  constructor(private readonly appService: AppService) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  // @Get()</span><br><span class="line">  // getHello(): string &#123;</span><br><span class="line">  //   return this.appService.getHello();</span><br><span class="line">  // &#125;</span><br><span class="line"></span><br><span class="line">  @Get()</span><br><span class="line">  @Render(&apos;index&apos;)</span><br><span class="line">  root() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      message: &apos;Hello world!&apos;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Post()</span><br><span class="line">  addHello()&#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      test: true</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>5、index.njk内修改部分njk的语法，刷新浏览器则可看到效果</p>
+
         </div>
         
-        
-        <div class="level is-mobile">
+        <div class="level is-size-7 is-uppercase">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2019/05/30/nestjs框架添加nunjucks模板引擎/#more">阅读更多</a>
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/nestjs/">nestjs</a>, <a class="has-link-grey -link" href="/tags/node-js/">node.js</a>
                 </div>
             </div>
         </div>
+        
         
         
     </div>
@@ -251,9 +198,37 @@
 
 
 
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+        </div>
+    </div>
+</div>
 
 
 
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/05/30/nestjs学习资料/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">nestjs学习资料</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/06/26/sketch导出iconfont识别的svg/">
+                <span class="level-item">sketch导出iconfont识别的svg</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
 
 
 </div>

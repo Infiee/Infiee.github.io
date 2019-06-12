@@ -524,6 +524,14 @@ figure.highlight:hover .copy {
   height: 1px;
   background-color: #000;
 }
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+  line-height: 1.5;
+}
 .is-size-3 {
   font-size: 1.8rem !important;
 }
